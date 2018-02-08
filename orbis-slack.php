@@ -57,7 +57,7 @@ class OrbisSlackPlugin {
 			'meta_query'     => array(
 				array(
 					'key'     => '_orbis_project_is_finished',
-					'compare' => 'NOT EXISTS'
+					'compare' => 'NOT EXISTS',
 				),
 			),
 		) );
@@ -68,7 +68,7 @@ class OrbisSlackPlugin {
 
 				do_action( 'orbis_post_requires_comment', $post );
 			}
-		}			
+		}
 	}
 	/**
 	 * Slack events.
