@@ -72,7 +72,7 @@ class OrbisSlackPlugin {
 			while ( $query->have_posts() ) {
 				$query->the_post();
 
-				do_action( 'orbis_post_requires_comment', $post );
+				do_action( 'orbis_post_requires_comment', \get_post() );
 			}
 		}			
 	}
