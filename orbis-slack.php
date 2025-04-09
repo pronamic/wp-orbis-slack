@@ -46,18 +46,24 @@ class OrbisSlackPlugin {
 
 	public function test() {
 		$query = new WP_Query( array(
-			'post_type'      => 'orbis_project',
-			'posts_per_page' => 10,
-			'date_query'     => array(
+			'post_type'                 => 'orbis_project',
+			'posts_per_page'            => 10,
+			'orbis_project_is_finished' => false,
+			'orderby'                   => 'last_comment_date',
+			'order'                     => 'ASC',
+			'author__not_in'            => array(
+				19,
+			),
+			'date_query'                => array(
 				array(
 					'column' => 'last_comment_date',
 					'before' => '1 week ago',
 				),
 			),
-			'meta_query'     => array(
+			'meta_query'                => array(
 				array(
 					'key'     => '_orbis_project_is_finished',
-					'compare' => 'NOT EXISTS',
+					'compare' => 'NOT EXISTS'
 				),
 			),
 		) );
@@ -68,7 +74,7 @@ class OrbisSlackPlugin {
 
 				do_action( 'orbis_post_requires_comment', $post );
 			}
-		}
+		}			
 	}
 	/**
 	 * Slack events.
