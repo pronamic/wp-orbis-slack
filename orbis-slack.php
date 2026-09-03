@@ -10,7 +10,7 @@ Requires at least: 3.0
 Author: Pronamic
 Author URI: https://www.pronamic.eu/
 
-Text Domain: orbis
+Text Domain: orbis-slack
 Domain Path: /languages/
 
 License: GPL
@@ -19,6 +19,13 @@ GitHub URI: https://github.com/wp-orbis/wp-orbis-slack
 */
 
 class OrbisSlackPlugin {
+	/**
+	 * Path to the main plugin file.
+	 *
+	 * @var string
+	 */
+	public $file;
+
 	public function __construct( $file ) {
 		$this->file = $file;
 	}
@@ -76,6 +83,25 @@ class OrbisSlackPlugin {
 			}
 		}			
 	}
+
+	/**
+	 * Get the description of the Orbis Slack event.
+	 *
+	 * The `slack_get_events` filter is applied on the `plugins_loaded` action by
+	 * the Slack plugin, translation functions can not be used that early. The
+	 * description is only used in the admin interface, which is rendered long
+	 * after the `init` action.
+	 *
+	 * @return string
+	 */
+	private function get_event_description() {
+		if ( ! did_action( 'init' ) ) {
+			return 'When an Orbis post requires a comment.';
+		}
+
+		return __( 'When an Orbis post requires a comment.', 'orbis-slack' );
+	}
+
 	/**
 	 * Slack events.
 	 *
@@ -86,7 +112,7 @@ class OrbisSlackPlugin {
 	public function slack_get_events( $events ) {
 		$events['orbis_post_requires_comment'] = array(
 			'action'      => 'orbis_post_requires_comment',
-			'description' => __( 'When an Orbis post requires a comment.', 'orbis-slack' ),
+			'description' => $this->get_event_description(),
 			'message'     => function( $post ) {
 				$message = sprintf(
 					__( 'Orbis post <%s|%s> requires a comment.', 'orbis-slack' ),
