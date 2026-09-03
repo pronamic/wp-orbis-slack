@@ -11,6 +11,8 @@
 
 .wp-env.json
 
+deploy.php
+
 .phpcs.dir.phpcompatibility.xml
 .phpcs.dir.xml
 
