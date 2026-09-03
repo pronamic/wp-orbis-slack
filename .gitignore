@@ -1,0 +1,15 @@
+# Build
+/build/
+
+# Composer
+/vendor/
+/composer.phar
+
+# Deploy
+/deploy/
+
+# Node
+/node_modules/
+
+# macOS
+.DS_Store

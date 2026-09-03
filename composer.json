@@ -1,0 +1,65 @@
+{
+	"name": "pronamic/wp-orbis-slack",
+	"description": "Orbis Slack integrates Orbis with Slack.",
+	"license": "GPL-2.0-or-later",
+	"keywords": [
+		"orbis",
+		"slack",
+		"wordpress",
+		"plugin"
+	],
+	"homepage": "https://www.pronamic.eu/plugins/orbis-slack/",
+	"authors": [
+		{
+			"name": "Pronamic",
+			"email": "info@pronamic.nl",
+			"homepage": "https://www.pronamic.eu/",
+			"role": "Company"
+		},
+		{
+			"name": "Remco Tolsma",
+			"email": "info@remcotolsma.nl",
+			"homepage": "https://www.remcotolsma.nl/",
+			"role": "Developer"
+		}
+	],
+	"support": {
+		"email": "support@pronamic.nl",
+		"issues": "https://github.com/pronamic/wp-orbis-slack/issues",
+		"source": "https://github.com/pronamic/wp-orbis-slack"
+	},
+	"type": "wordpress-plugin",
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"wp-slug": "orbis-slack"
+	},
+	"require-dev": {
+		"pronamic/wp-coding-standards": "^2.1",
+		"wp-cli/dist-archive-command": "*",
+		"wp-cli/wp-cli-bundle": "*"
+	},
+	"scripts": {
+		"build": [
+			"rm -rf ./build/stage-1",
+			"rm -rf ./build/orbis-slack",
+			"rsync --recursive --verbose --exclude-from=.distignore --exclude=/vendor/ ./ ./build/stage-1/",
+			"composer install --no-dev --prefer-dist --optimize-autoloader --working-dir=./build/stage-1/",
+			"rsync --recursive --verbose --exclude-from=.distignore ./build/stage-1/ ./build/orbis-slack/",
+			"vendor/bin/wp i18n make-pot ./build/orbis-slack/ --slug=orbis-slack",
+			"vendor/bin/wp i18n make-mo ./build/orbis-slack/languages/",
+			"vendor/bin/wp dist-archive ./build/orbis-slack/ --plugin-dirname=orbis-slack --force"
+		],
+		"dist-archive": "wp dist-archive . --plugin-dirname=orbis-slack",
+		"make-pot": [
+			"@build",
+			"rsync --recursive --delete --verbose ./build/orbis-slack/languages/ ./languages/",
+			"vendor/bin/wp i18n update-po ./languages/orbis-slack.pot"
+		],
+		"phpcs": "vendor/bin/phpcs",
+		"qa": [
+			"@phpcs"
+		]
+	}
+}
